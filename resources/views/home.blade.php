@@ -10,11 +10,10 @@
     <h1 class="text-center">List Page Layout</h1>
     @if(count($directories) > 0)
         <ul>
-            @foreach($directories as $directory)
-            <!-- 只顯示第一層目錄 -->
-            @if(count(explode(DIRECTORY_SEPARATOR, $directory))==1)
-                <li>{{ $directory }}</li>
-            @endif
+            @foreach($directories as $directory)       
+                <li>
+                    <a href='/01_module_c/heritages/{{$directory}}/'>{{ $directory }}</a>
+                </li>   
             @endforeach
         </ul>
     @endif
@@ -22,11 +21,12 @@
     @if(count($files) > 0)
         <ul>
             @foreach($files as $file)
-            <!-- 只顯示第一層目錄 -->
-            @if(count(explode(DIRECTORY_SEPARATOR, $file))==1)
+
                 <!--使用mb_substr來去掉檔名前面的日期部分-->
-                <li>{{ mb_substr($file,11) }}</li>
-            @endif
+                <li>
+                    <a href='/01_module_c/heritages/{{$file}}'>{{ mb_substr($file,11) }}</a>
+                </li>
+
             @endforeach
         </ul>
     @endif
