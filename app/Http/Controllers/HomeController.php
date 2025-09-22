@@ -56,12 +56,12 @@ class HomeController extends Controller
             abort(404);
         }
 
-        // 取得所有檔案和目錄
+        // 使用glob()，取得符合給定的path名稱的所有檔案和目錄
         $items = glob($path . '/*');
 
         $directories = [];
         $files = [];
-
+        //dd($items);
         foreach ($items as $item) {
             $name = basename($item);
 
