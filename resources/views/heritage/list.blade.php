@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>里昂文化遺產地點</title>
+    <title>Listing Page Layout</title>
     <style>
         * {
             margin: 0;
@@ -13,73 +13,102 @@
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
-            padding: 20px;
+            padding: 40px;
             max-width: 1200px;
             margin: 0 auto;
+            background: #f5f5f5;
         }
-        h1 {
-            color: #333;
+        .header {
+            background: #000;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .container {
+            display: flex;
+            gap: 40px;
+        }
+        .main-content {
+            flex: 1;
+        }
+        .sidebar {
+            width: 300px;
+        }
+        .search-box {
             margin-bottom: 30px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #ddd;
+        }
+        .search-box h3 {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .search-box form {
+            display: flex;
+            gap: 5px;
+        }
+        .search-box input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        .search-box button {
+            padding: 8px 15px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .search-box button:hover {
+            background: #555;
         }
         .breadcrumb {
             margin-bottom: 20px;
             color: #666;
+            font-size: 0.9em;
         }
         .breadcrumb a {
-            color: #0066cc;
+            color: #0000ff;
             text-decoration: none;
         }
         .breadcrumb a:hover {
             text-decoration: underline;
         }
-        .content-section {
-            margin-bottom: 30px;
-        }
-        .content-section h2 {
-            color: #444;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
         .item-list {
             list-style: none;
         }
         .item {
-            padding: 15px;
-            margin-bottom: 10px;
-            background: #f9f9f9;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            transition: background 0.3s;
+            margin-bottom: 25px;
         }
-        .item:hover {
-            background: #f0f0f0;
-        }
-        .item a {
-            color: #0066cc;
+        .item a.title {
+            color: #0000ff;
             text-decoration: none;
-            font-weight: bold;
+            font-size: 1.1em;
             display: block;
             margin-bottom: 5px;
         }
-        .item a:hover {
+        .item a.title:hover {
             text-decoration: underline;
         }
         .item .summary {
-            color: #666;
-            font-size: 0.9em;
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.5;
         }
-        .item .meta {
-            color: #999;
-            font-size: 0.85em;
-            margin-top: 5px;
+        .directory-item {
+            margin-bottom: 15px;
         }
-        .directory-icon::before {
-            content: "📁 ";
+        .directory-item a {
+            color: #0000ff;
+            text-decoration: none;
+            font-size: 1.1em;
         }
-        .file-icon::before {
-            content: "📄 ";
+        .directory-item a:hover {
+            text-decoration: underline;
         }
         .no-items {
             color: #999;
@@ -88,72 +117,71 @@
     </style>
 </head>
 <body>
-    <h1>里昂文化遺產地點</h1>
+    <div class="header">
+        <h1>Listing Page Layout</h1>
+    </div>
 
-    @if($currentPath)
-        <div class="breadcrumb">
-            <a href="/">首頁</a> /
-            @php
-                $parts = explode('/', $currentPath);
-                $accumulated = '';
-            @endphp
-            @foreach($parts as $index => $part)
-                @php $accumulated .= ($index > 0 ? '/' : '') . $part; @endphp
-                @if($index < count($parts) - 1)
-                    <a href="/heritages/{{ $accumulated }}">{{ $part }}</a> /
-                @else
-                    {{ $part }}
-                @endif
-            @endforeach
-        </div>
-    @endif
+    <div class="container">
+        <div class="main-content">
+            @if($currentPath)
+                <div class="breadcrumb">
+                    <a href="/">Home</a> /
+                    @php
+                        $parts = explode('/', $currentPath);
+                        $accumulated = '';
+                    @endphp
+                    @foreach($parts as $index => $part)
+                        @php $accumulated .= ($index > 0 ? '/' : '') . $part; @endphp
+                        @if($index < count($parts) - 1)
+                            <a href="/heritages/{{ $accumulated }}">{{ $part }}</a> /
+                        @else
+                            {{ $part }}
+                        @endif
+                    @endforeach
+                </div>
+            @endif
 
-    @if(count($directories) > 0)
-        <div class="content-section">
-            <h2>資料夾</h2>
-            <ul class="item-list">
-                @foreach($directories as $dir)
-                    <li class="item">
-                        <a href="/heritages/{{ $dir['path'] }}" class="directory-icon">
-                            {{ $dir['name'] }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+            @if(count($directories) > 0)
+                <ul class="item-list">
+                    @foreach($directories as $dir)
+                        <li class="directory-item">
+                            <a href="/heritages/{{ $dir['path'] }}">
+                                {{ $dir['name'] }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
 
-    @if(count($files) > 0)
-        <div class="content-section">
-            <h2>文章</h2>
             <ul class="item-list">
                 @foreach($files as $file)
                     <li class="item">
-                        <a href="/heritages/{{ $file['path'] }}" class="file-icon">
+                        <a href="/heritages/{{ $file['path'] }}" class="title">
                             {{ $file['title'] }}
                         </a>
                         @if($file['summary'])
                             <div class="summary">{{ $file['summary'] }}</div>
+                        @else
+                            <div class="summary">{{ substr(strip_tags($file['title']), 0, 150) }}...</div>
                         @endif
-                        <div class="meta">
-                            @if(isset($file['date']))
-                                日期: {{ $file['date'] }}
-                            @endif
-                            @if(!empty($file['tags']))
-                                | 標籤:
-                                @foreach($file['tags'] as $tag)
-                                    <a href="/tags/{{ $tag }}">{{ $tag }}</a>{{ !$loop->last ? ', ' : '' }}
-                                @endforeach
-                            @endif
-                        </div>
                     </li>
                 @endforeach
             </ul>
-        </div>
-    @endif
 
-    @if(count($directories) == 0 && count($files) == 0)
-        <p class="no-items">此資料夾沒有內容</p>
-    @endif
+            @if(count($directories) == 0 && count($files) == 0)
+                <p class="no-items">No content in this folder</p>
+            @endif
+        </div>
+
+        <div class="sidebar">
+            <div class="search-box">
+                <h3>Search</h3>
+                <form action="/search" method="GET">
+                    <input type="text" name="q" placeholder="KEYWORD" />
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
