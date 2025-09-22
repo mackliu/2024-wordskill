@@ -8,7 +8,7 @@
     <!-- Social Media Meta Tags -->
     <meta property="og:title" content="{{ $title }}">
     <meta property="og:description" content="{{ $meta['summary'] ?? '' }}">
-    <meta property="og:image" content="/content-pages/images/{{ $cover }}">
+    <meta property="og:image" content="{{ url('/public/content-pages/images/' . $cover) }}">
     <meta property="og:type" content="article">
 
     <style>
@@ -146,13 +146,13 @@
 </head>
 <body>
     <nav class="nav-bar">
-        <a href="/">首頁</a>
-        <a href="/heritages">所有文章</a>
+        <a href="{{ url('/') }}">首頁</a>
+        <a href="{{ url('/heritages') }}">所有文章</a>
     </nav>
 
     @if(isset($cover))
         <div class="cover-container">
-            <img src="/content-pages/images/{{ $cover }}" alt="{{ $title }}" class="cover-image">
+            <img src="{{ url('/public/content-pages/images/' . $cover) }}" alt="{{ $title }}" class="cover-image">
         </div>
     @endif
 
@@ -179,7 +179,7 @@
                     <h3>標籤</h3>
                     <div class="tags">
                         @foreach($tags as $tag)
-                            <a href="/tags/{{ $tag }}">{{ $tag }}</a>
+                            <a href="{{ url('/tags/' . $tag) }}">{{ $tag }}</a>
                         @endforeach
                     </div>
                 @endif

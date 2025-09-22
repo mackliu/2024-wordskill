@@ -32,9 +32,18 @@ class HomeController extends Controller
 
         $fullPath = $this->basePath . '/' . $path;
 
-        // 檢查是否為檔案
+        // 檢查是否為檔案（直接路徑）
         if (is_file($fullPath)) {
             return $this->showFile($path);
+        }
+
+        // 嘗試加上常見副檔名
+        $extensions = ['.html', '.txt'];
+        foreach ($extensions as $ext) {
+            $fileWithExt = $fullPath . $ext;
+            if (is_file($fileWithExt)) {
+                return $this->showFile($path . $ext);
+            }
         }
 
         // 檢查是否為目錄
@@ -87,9 +96,11 @@ class HomeController extends Controller
                 $content = file_get_contents($item);
                 $parsed = $this->parseFrontMatter($content);
 
+                // 移除副檔名的路徑
+                $pathWithoutExt = pathinfo($name, PATHINFO_FILENAME);
                 $files[] = [
                     'name' => $name,
-                    'path' => $subPath ? $subPath . '/' . $name : $name,
+                    'path' => $subPath ? $subPath . '/' . $pathWithoutExt : $pathWithoutExt,
                     'type' => 'file',
                     'date' => $fileInfo['date'],
                     'title' => $parsed['meta']['title'] ?? $this->getTitleFromFileName($name),
@@ -263,7 +274,7 @@ class HomeController extends Controller
 
             // 檢查是否為圖片（單獨一行且有圖片副檔名）
             if (preg_match('/^[^\s]+\.(jpg|jpeg|png|gif|webp)$/i', $line)) {
-                $html .= '<img src="/content-pages/images/' . $line . '" alt="' . $line . '">';
+                $html .= '<img src="' . url('/public/content-pages/images/' . $line) . '" alt="' . $line . '">';
             } else {
                 $html .= '<p>' . htmlspecialchars($line) . '</p>';
             }
@@ -278,9 +289,11 @@ class HomeController extends Controller
     protected function fixImagePaths($content)
     {
         // 將相對路徑轉為絕對路徑
-        $content = preg_replace(
+        $content = preg_replace_callback(
             '/src=["\'](?!http|\/)(.*?)["\']/',
-            'src="/content-pages/images/$1"',
+            function($matches) {
+                return 'src="' . url('/public/content-pages/images/' . $matches[1]) . '"';
+            },
             $content
         );
 
@@ -326,10 +339,12 @@ class HomeController extends Controller
             if (in_array($tag, $tags)) {
                 $fileName = basename($file);
                 $relativePath = str_replace($this->basePath . '/', '', $file);
+                // 移除路徑中的副檔名
+                $relativePathWithoutExt = preg_replace('/\.(html|txt)$/', '', $relativePath);
 
                 $matchedFiles[] = [
                     'name' => $fileName,
-                    'path' => $relativePath,
+                    'path' => $relativePathWithoutExt,
                     'title' => $parsed['meta']['title'] ?? $this->getTitleFromFileName($fileName),
                     'summary' => $parsed['meta']['summary'] ?? ''
                 ];
@@ -372,10 +387,12 @@ class HomeController extends Controller
                 if (stripos($fullContent, $keyword) !== false) {
                     $fileName = basename($file);
                     $relativePath = str_replace($this->basePath . '/', '', $file);
+                    // 移除路徑中的副檔名
+                    $relativePathWithoutExt = preg_replace('/\.(html|txt)$/', '', $relativePath);
 
                     $results[] = [
                         'name' => $fileName,
-                        'path' => $relativePath,
+                        'path' => $relativePathWithoutExt,
                         'title' => $title,
                         'summary' => $parsed['meta']['summary'] ?? ''
                     ];

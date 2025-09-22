@@ -5,6 +5,9 @@
 
     RewriteEngine On
 
+    # Set RewriteBase for subdirectory
+    RewriteBase /01_module_c
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

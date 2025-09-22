@@ -104,12 +104,12 @@
     </style>
 </head>
 <body>
-    <a href="/" class="back-link">← 返回首頁</a>
+    <a href="{{ url('/') }}" class="back-link">← 返回首頁</a>
 
     <h1>搜尋文章</h1>
 
     <div class="search-form">
-        <form action="/search" method="GET">
+        <form action="{{ url('/search') }}" method="GET">
             <input type="text" name="q" value="{{ $query }}" placeholder="輸入搜尋關鍵字...">
             <button type="submit">搜尋</button>
             <div class="help-text">提示: 使用 "/" 分隔多個關鍵字進行 OR 搜尋，例如: lyon/heritage</div>
@@ -127,7 +127,7 @@
                 <ul class="item-list">
                     @foreach($results as $result)
                         <li class="item">
-                            <a href="/heritages/{{ $result['path'] }}">
+                            <a href="{{ url('/heritages/' . $result['path']) }}">
                                 {{ $result['title'] }}
                             </a>
                             @if($result['summary'])

@@ -77,7 +77,7 @@
     </style>
 </head>
 <body>
-    <a href="/" class="back-link">← 返回首頁</a>
+    <a href="{{ url('/') }}" class="back-link">← 返回首頁</a>
 
     <h1>標籤: <span class="tag-label">{{ $tag }}</span></h1>
 
@@ -87,7 +87,7 @@
             <ul class="item-list">
                 @foreach($files as $file)
                     <li class="item">
-                        <a href="/heritages/{{ $file['path'] }}">
+                        <a href="{{ url('/heritages/' . $file['path']) }}">
                             {{ $file['title'] }}
                         </a>
                         @if($file['summary'])

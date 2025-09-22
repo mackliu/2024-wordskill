@@ -125,7 +125,7 @@
         <div class="main-content">
             @if($currentPath)
                 <div class="breadcrumb">
-                    <a href="/">Home</a> /
+                    <a href="{{ url('/') }}">Home</a> /
                     @php
                         $parts = explode('/', $currentPath);
                         $accumulated = '';
@@ -133,7 +133,7 @@
                     @foreach($parts as $index => $part)
                         @php $accumulated .= ($index > 0 ? '/' : '') . $part; @endphp
                         @if($index < count($parts) - 1)
-                            <a href="/heritages/{{ $accumulated }}">{{ $part }}</a> /
+                            <a href="{{ url('/heritages/' . $accumulated) }}">{{ $part }}</a> /
                         @else
                             {{ $part }}
                         @endif
@@ -145,7 +145,7 @@
                 <ul class="item-list">
                     @foreach($directories as $dir)
                         <li class="directory-item">
-                            <a href="/heritages/{{ $dir['path'] }}">
+                            <a href="{{ url('/heritages/' . $dir['path']) }}">
                                 {{ $dir['name'] }}
                             </a>
                         </li>
@@ -156,7 +156,7 @@
             <ul class="item-list">
                 @foreach($files as $file)
                     <li class="item">
-                        <a href="/heritages/{{ $file['path'] }}" class="title">
+                        <a href="{{ url('/heritages/' . $file['path']) }}" class="title">
                             {{ $file['title'] }}
                         </a>
                         @if($file['summary'])
@@ -176,7 +176,7 @@
         <div class="sidebar">
             <div class="search-box">
                 <h3>Search</h3>
-                <form action="/search" method="GET">
+                <form action="{{ url('/search') }}" method="GET">
                     <input type="text" name="q" placeholder="KEYWORD" />
                     <button type="submit">Search</button>
                 </form>
